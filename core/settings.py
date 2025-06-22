@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'auth_sys',
-    'quiz'
+    'quiz',
 ]
 
 MIDDLEWARE = [
@@ -127,6 +127,8 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = BASE_DIR / "mediafiles"
 MEDIA_URL = 'static/'
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
