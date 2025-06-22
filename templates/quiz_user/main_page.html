@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+
+<a href="{% url 'quiz_creation' %}">Создать</a>
 <form method="get">
     <input type="text" name="creator" placeholder="Ник создателя" value="{{ request.GET.creator }}">
     

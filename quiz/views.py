@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Quiz
+from .forms import QuizForm
 
 
 def quiz_list(request):
@@ -15,22 +16,29 @@ def quiz_list(request):
     if sort_by in ['created_at', 'title', 'topic', 'creator__username']:
         quizzes = quizzes.order_by(sort_by)
 
-    return render(request, 'quiz_list.html', {'quizzes': quizzes})
-
-def quiz_redirect(request):
-    return render(request, 'quiz/quiz_redirect.html')
+    return render(request, 'quiz_user/main_page.html', {'quizzes': quizzes})
 
 
 @login_required
-def quiz_creation(request):
+def quiz_create(request):
     if request.method == 'POST':
-        title = request.POST.get('title')
-        topic = request.POST.get('topic')
-        content = request.POST.get('content')
-        attachment = request.POST.get('attachment')
-        if title:
-            Thread.objects.create(title=title, content=content, attachment=attachment, created_by=request.user)
-            return redirect('forum_main_page')
-        else:
-            return HttpResponse("Title is required for post.")
-    return redirect('forum_main_page')
+        form = QuizForm(request.POST, request.FILES)
+        if form.is_valid():
+            quiz = form.save(commit=False)
+            quiz.creator = request.user
+            quiz.save()
+            return redirect('quiz_detail', quiz_id=quiz.id)  
+    else:
+        form = QuizForm()
+    
+    return render(request, 'quiz_creator/quiz_creation.html', {'form': form})
+
+
+# <a href="{% url 'profile' %}">Профиль</a>
+#                 {% if user.account.permission == "moderator" %}
+#                     <a href="{% url 'mod_panel' %}">Модерация</a>
+#                 {% endif %}
+#                 <a href="{% url 'logout' %}">Выйти</a>
+#             {% else %}
+#                 <a href="{% url 'login' %}">Войти</a>
+#                 <a href="{% url 'register' %}">Регистрация</a>
