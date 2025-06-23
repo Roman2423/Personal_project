@@ -4,7 +4,7 @@ from .models import Quiz
 from .forms import QuizForm
 
 
-def quiz_list(request):
+def quiz_list_view(request):
     sort_by = request.GET.get('sort', 'created_at') 
     creator_name = request.GET.get('creator')
 
@@ -20,25 +20,27 @@ def quiz_list(request):
 
 
 @login_required
-def quiz_create(request):
+def quiz_create_view(request):
     if request.method == 'POST':
         form = QuizForm(request.POST, request.FILES)
         if form.is_valid():
             quiz = form.save(commit=False)
             quiz.creator = request.user
             quiz.save()
-            return redirect('quiz_detail', quiz_id=quiz.id)  
+            return redirect('quiz_detail', id=quiz.id)  
     else:
         form = QuizForm()
     
     return render(request, 'quiz_creator/quiz_creation.html', {'form': form})
 
 
+@login_required
+def quiz_detail_view(request, id):
+    quiz = get_object_or_404(Quiz, id=id)
+    return render(request, 'quiz_user/quiz_detail.html', {'quiz': quiz})
+
+
 # <a href="{% url 'profile' %}">Профиль</a>
 #                 {% if user.account.permission == "moderator" %}
 #                     <a href="{% url 'mod_panel' %}">Модерация</a>
 #                 {% endif %}
-#                 <a href="{% url 'logout' %}">Выйти</a>
-#             {% else %}
-#                 <a href="{% url 'login' %}">Войти</a>
-#                 <a href="{% url 'register' %}">Регистрация</a>

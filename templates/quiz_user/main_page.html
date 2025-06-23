@@ -19,10 +19,11 @@
     {% for quiz in quizzes %}
         <li>
             <strong>{{ quiz.title }}</strong> ({{ quiz.topic }})<br>
-            Создано: {{ quiz.creator.username }} — {{ quiz.created_at }}
+            Создано: {{ quiz.creator.username }} — {{ quiz.created_at|date:"d.m.Y" }}  <a href="{% url 'quiz_detail' quiz.id %}">Подробнее</a>
         </li>
     {% empty %}
         <li>Ничего не найдено</li>
     {% endfor %}
 </ul>
+
 {% endblock %}

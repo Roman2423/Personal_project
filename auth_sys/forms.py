@@ -5,7 +5,6 @@ from .models import Account, Permissions
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
-    permission = forms.ChoiceField(choices=Permissions.choices)
 
     class Meta:
         model = User

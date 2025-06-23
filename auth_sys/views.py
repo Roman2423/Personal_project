@@ -9,11 +9,10 @@ def register_view(request):
         if form.is_valid():
             user = form.save(commit=False)
             password = form.cleaned_data['password']
-            permission = form.cleaned_data['permission']
             user.set_password(password)
             user.save()
 
-            Account.objects.create(user=user, permission=permission)
+            Account.objects.create(user=user)
             login(request, user)
             return redirect('main_page')
     else:
